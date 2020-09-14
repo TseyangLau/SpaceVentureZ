@@ -38,7 +38,7 @@ class SpaceVentureZ(Display):
             '''RUN GAME HERE'''
 
             player_ship = Ship(100, 400, 400, 50)
-            player_ship.draw(svz.display)
+            player_ship.draw(self.display)
 
             # *************
 
