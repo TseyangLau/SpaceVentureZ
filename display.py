@@ -1,7 +1,8 @@
 import pygame
 from pygame.locals import *
 
-''' creates the menu and user display'''
+
+# creates the menu and user display
 class Display:
 
     def __init__(self):
@@ -15,11 +16,12 @@ class Display:
         self.font = pygame.font.SysFont('times new roman', 30)
 
         self.display = pygame.display.set_mode((self.width, self.height), RESIZABLE)
-        # set to false untill user clickes within a frame on display
+        # set to false until user clicks within a frame on display
         self.user_click = False
 
-    def add_text(self, text, font, color, surface, x, y):
-        surface.blit(font.render(text, True, color), (x, y))
+    @staticmethod
+    def add_text(text, font, color_, surface, x, y):
+        surface.blit(font.render(text, True, color_), (x, y))
 
     def menu(self):
         start = True
@@ -62,6 +64,7 @@ class Display:
             pygame.display.update()
             self.clock.tick(60)
 
+    ''' WORKS EVEN WHEN COMMENTED OUT
     def run_game(self):
         start = True
         while start:
@@ -95,7 +98,7 @@ class Display:
                         self.user_click = True
             pygame.display.update()
             self.clock.tick(60)
-
+    '''
     def options(self):
         start = True
         while start:
@@ -132,7 +135,7 @@ class Display:
 
 
 '''
-Wasnt able to change the file name but class Display() will display 
+Wasn't able to change the file name but class Display() will display 
 the menu as well has handle user options of starting the game and changing to 
 more options
 
