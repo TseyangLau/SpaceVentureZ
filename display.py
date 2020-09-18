@@ -64,7 +64,6 @@ class Display:
             pygame.display.update()
             self.clock.tick(60)
 
-    ''' WORKS EVEN WHEN COMMENTED OUT
     def run_game(self):
         start = True
         while start:
@@ -96,9 +95,11 @@ class Display:
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.user_click = True
+            '''Runa and update game display'''
+            self.run()
             pygame.display.update()
             self.clock.tick(60)
-    '''
+    
     def options(self):
         start = True
         while start:
@@ -132,12 +133,13 @@ class Display:
                         self.user_click = True
             pygame.display.update()
             self.clock.tick(60)
+            
+'''added run here to be overwritten in the main.py'''
+    def run(self):
+        pass
+
 
 
 '''
-Wasn't able to change the file name but class Display() will display 
-the menu as well has handle user options of starting the game and changing to 
-more options
-
 NOTE: options is incomplete
 '''
