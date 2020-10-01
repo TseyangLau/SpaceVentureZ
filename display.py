@@ -9,14 +9,16 @@ class Display:
         pygame.init()
         self.clock = pygame.time.Clock()
         pygame.display.set_caption('SpaceVentureZ')
-
+    
+        '''Sets the speed of the game in the run_game function'''
+        self.game_speed = 60 
         ''' Following are Display variables need for creation of display canvas'''
         self.background_color = (0, 0, 0)
         self.width = 600
         self.height = 600
         self.font = pygame.font.SysFont('times new roman', 30)
 
-        self.display = pygame.display.set_mode((self.width, self.height), RESIZABLE)
+        self.display = pygame.display.set_mode((self.width, self.height))
 
         '''variables that handles user mouse click on any display'''
         self.user_click = False
@@ -25,13 +27,10 @@ class Display:
     @staticmethod
     def add_text(text, font, color_, display, x, y):
         display.blit(font.render(text, True, color_), (x, y))
-
+    '''Adds an image on the display screen'''
     @staticmethod
     def add_image(image, scale_w, scale_h, display, x, y):
         display.blit(pygame.transform.scale(image, (scale_w, scale_h)), (x, y))
-
-    def run_display(self):
-        pass
 
     '''Display's game menu '''
     def menu(self):
@@ -44,12 +43,12 @@ class Display:
             '''gets user mouse click coordinates '''
             x, y = pygame.mouse.get_pos()
 
-            '''Creates Buttons and draw's them on the display'''
-            '''Load image'''
+            '''Load's image'''
             game_Logo = pygame.image.load('game_images/SpaceVentureZ.png').convert()
             start_game = pygame.image.load('game_images/startButton.png').convert()
             options = pygame.image.load('game_images/optionButton.png').convert()
-
+            
+            '''Gets the rect from the images loaded and sets the position on display'''
             start_game_b = start_game.get_rect()
             start_game_b.x, start_game_b.y , start_game_b.w, start_game_b.h = (175, 200, 250, 85)
             options_b = options.get_rect()
