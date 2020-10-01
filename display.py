@@ -26,11 +26,17 @@ class Display:
     def add_text(text, font, color_, display, x, y):
         display.blit(font.render(text, True, color_), (x, y))
 
+    @staticmethod
+    def add_image(image, scale_w, scale_h, display, x, y):
+        display.blit(pygame.transform.scale(image, (scale_w, scale_h)), (x, y))
+
     def run_display(self):
         pass
 
     '''Display's game menu '''
     def menu(self):
+        self.display = pygame.display.set_mode((600, 600))
+
         start = True
         while start:
             self.display.fill((0, 0, 0))
@@ -39,13 +45,16 @@ class Display:
             x, y = pygame.mouse.get_pos()
 
             '''Creates Buttons and draw's them on the display'''
-            start_game_b = pygame.Rect(200, 150, 250, 50)
-            options_b = pygame.Rect(200, 201, 250, 50)
+            '''Load image'''
+            game_Logo = pygame.image.load('game_images/SpaceVentureZ.png').convert()
+            start_game = pygame.image.load('game_images/startButton.png').convert()
+            options = pygame.image.load('game_images/optionButton.png').convert()
 
-            pygame.draw.rect(self.display, (255, 0, 0), start_game_b)
-            self.add_text('Start Game', self.font, (255, 255, 255), self.display, 260, 160)
-            pygame.draw.rect(self.display, (255, 255, 0), options_b)
-            self.add_text('Options', self.font, (0, 0, 0), self.display, 263, 210)
+            start_game_b = start_game.get_rect()
+            start_game_b.x, start_game_b.y , start_game_b.w, start_game_b.h = (175, 200, 250, 85)
+            options_b = options.get_rect()
+            options_b.x, options_b.y, options_b.w, options_b.h = (175, 285, 250, 85)
+
 
             '''pygame event handling, exit and user mouse click handling'''
             for event in pygame.event.get():
@@ -67,32 +76,22 @@ class Display:
             self.clock.tick(60)
 
     def run_game(self):
+        self.display = pygame.display.set_mode((self.width,self.height))
+
         start = True
         while start:
             self.display.fill((0, 0, 0))
             self.add_text('Game Page', self.font, (255, 0, 0), self.display, 100, 0)
-
-            '''gets user mouse click coordinates '''
-            x, y = pygame.mouse.get_pos()
-
-            '''Creates Buttons and draw's them on the display'''
-            menu = pygame.Rect(0, 0, 80, 40)
-
-            pygame.draw.rect(self.display, (192, 192, 192), menu)
-            self.add_text('Menu', self.font, (255, 255, 255), self.display, 0, 5)
 
             '''pygame event handling, exit and user mouse click handling'''
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     start = False
-                if event.type == MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        self.user_click = True
-                        if menu.collidepoint(x, y):
-                            if self.user_click:
-                                self.user_click = False
-                                self.menu()
+                 ''' Decided to press the escape button to leave the game'''
+                 if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        self.menu()
 
             '''Run and Update game display'''
             self.run()
@@ -101,6 +100,7 @@ class Display:
 
     ''' Dsiplay's Options Page'''
     def options(self):
+        self.display = pygame.display.set_mode((600, 600))
         start = True
         while start:
             self.display.fill((0, 0, 0))
