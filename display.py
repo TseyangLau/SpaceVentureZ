@@ -1,21 +1,22 @@
 import pygame
 from pygame.locals import *
 
-# creates user display
+
+# creates the menu and user display
 class Display:
 
     def __init__(self):
         """ initialize pygame and creates game title"""
+        pygame.mixer.pre_init(44100, -16, 1, 512)  # for audio lag reduction
         pygame.init()
         self.clock = pygame.time.Clock()
         pygame.display.set_caption('SpaceVentureZ')
-    
-        '''Sets the speed of the game in the run_game function'''
-        self.game_speed = 60 
+
+        self.game_speed = 60;
         ''' Following are Display variables need for creation of display canvas'''
         self.background_color = (0, 0, 0)
-        self.width = 600
-        self.height = 600
+        self.width = 750#600
+        self.height = 750#1050
         self.font = pygame.font.SysFont('times new roman', 30)
 
         self.display = pygame.display.set_mode((self.width, self.height))
@@ -35,25 +36,34 @@ class Display:
     '''Display's game menu '''
     def menu(self):
         self.display = pygame.display.set_mode((600, 600))
-
         start = True
+
+        '''Load's image'''
+        game_Logo = pygame.image.load('game_images/SpaceVentureZ.png').convert()
+        start_game = pygame.image.load('game_images/startButton.png').convert()
+        options = pygame.image.load('game_images/optionButton.png').convert()
+        screen = pygame.image.load('game_images/background.png').convert()
+
+        '''load sfx'''
+        menu_onclick = pygame.mixer.Sound('game_audio/menu_click.wav')
+
         while start:
             self.display.fill((0, 0, 0))
+
+            '''Display Image logo AND Button images'''
+            self.add_image(screen, 600, 600, self.display, 0, 0)
+            self.add_image(game_Logo, 450, 350, self.display, 75, 0)
+            self.add_image(start_game, 250, 85, self.display, 175, 200)
+            self.add_image(options, 250, 85, self.display, 175, 285)
 
             '''gets user mouse click coordinates '''
             x, y = pygame.mouse.get_pos()
 
-            '''Load's image'''
-            game_Logo = pygame.image.load('game_images/SpaceVentureZ.png').convert()
-            start_game = pygame.image.load('game_images/startButton.png').convert()
-            options = pygame.image.load('game_images/optionButton.png').convert()
-            
             '''Gets the rect from the images loaded and sets the position on display'''
             start_game_b = start_game.get_rect()
             start_game_b.x, start_game_b.y , start_game_b.w, start_game_b.h = (175, 200, 250, 85)
             options_b = options.get_rect()
             options_b.x, options_b.y, options_b.w, options_b.h = (175, 285, 250, 85)
-
 
             '''pygame event handling, exit and user mouse click handling'''
             for event in pygame.event.get():
@@ -66,17 +76,18 @@ class Display:
                         if start_game_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
+                                menu_onclick.play()  # play menu click sfx
                                 self.run_game()
                         if options_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
+                                menu_onclick.play()  # play menu click sfx
                                 self.options()
             pygame.display.update()
             self.clock.tick(60)
 
     def run_game(self):
-        self.display = pygame.display.set_mode((self.width,self.height))
-
+        self.display = pygame.display.set_mode((self.width, self.height))
         start = True
         while start:
             self.display.fill((0, 0, 0))
@@ -87,17 +98,16 @@ class Display:
                 if event.type == QUIT:
                     pygame.quit()
                     start = False
-                 ''' Decided to press the escape button to leave the game'''
-                 if event.type == KEYDOWN:
+                if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         self.menu()
 
             '''Run and Update game display'''
             self.run()
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(self.game_speed)
 
-    ''' Dsiplay's Options Page'''
+    ''' Display's Options Page'''
     def options(self):
         self.display = pygame.display.set_mode((600, 600))
         start = True
@@ -125,6 +135,7 @@ class Display:
                         if menu.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
+                                '''sounds goes here'''
                                 self.menu()
             pygame.display.update()
             self.clock.tick(60)
@@ -137,4 +148,3 @@ class Display:
 NOTE: options and menu are incomplete
 was unable to condense code into smaller helper functions
 '''
-
