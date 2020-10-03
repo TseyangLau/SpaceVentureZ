@@ -24,6 +24,10 @@ class Display:
         '''variables that handles user mouse click on any display'''
         self.user_click = False
 
+        '''user mouseover state variables'''
+        self.start_mouseover_state = False
+        self.options_mouseover_state = False
+
     '''Prints out text on the screen based on location x , y'''
     @staticmethod
     def add_text(text, font, color_, display, x, y):
@@ -45,7 +49,8 @@ class Display:
         screen = pygame.image.load('game_images/background.png').convert()
 
         '''load sfx'''
-        menu_onclick = pygame.mixer.Sound('game_audio/menu_click.wav')
+        menu_onclick_sound = pygame.mixer.Sound('game_audio/menu_click.wav')
+        menu_mouseover_sound = pygame.mixer.Sound('game_audio/menu_mouseover.wav')
 
         while start:
             self.display.fill((0, 0, 0))
@@ -58,6 +63,7 @@ class Display:
 
             '''gets user mouse click coordinates '''
             x, y = pygame.mouse.get_pos()
+            mouse = pygame.mouse.get_pos()
 
             '''Gets the rect from the images loaded and sets the position on display'''
             start_game_b = start_game.get_rect()
@@ -65,23 +71,38 @@ class Display:
             options_b = options.get_rect()
             options_b.x, options_b.y, options_b.w, options_b.h = (175, 285, 250, 85)
 
-            '''pygame event handling, exit and user mouse click handling'''
+            '''get mouseover state'''
+            start_mouseover = start_game_b.x + start_game_b.w > mouse[0] > start_game_b.x and start_game_b.y + start_game_b.h > mouse[1] > start_game_b.y
+            options_mouseover = options_b.x + options_b.w > mouse[0] > options_b.x and options_b.y + options_b.h > mouse[1] > options_b.y
+
+            '''pygame event handling, exit, mouseover, and user mouse click handling'''
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     start = False
+                if event.type == MOUSEMOTION:
+                    if start_mouseover and self.start_mouseover_state is False:
+                        menu_mouseover_sound.play()  # play mouseover sfx
+                        self.start_mouseover_state = True
+                    if start_mouseover is False and self.start_mouseover_state is True:
+                        self.start_mouseover_state = False  # reset mouseover
+                    if options_mouseover and self.options_mouseover_state is False:
+                        menu_mouseover_sound.play()  # play mouseover sfx
+                        self.options_mouseover_state = True
+                    if options_mouseover is False and self.options_mouseover_state is True:
+                        self.options_mouseover_state = False  # reset mouseover
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.user_click = True
                         if start_game_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
-                                menu_onclick.play()  # play menu click sfx
+                                menu_onclick_sound.play()  # play menu click sfx
                                 self.run_game()
                         if options_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
-                                menu_onclick.play()  # play menu click sfx
+                                menu_onclick_sound.play()  # play menu click sfx
                                 self.options()
             pygame.display.update()
             self.clock.tick(60)
