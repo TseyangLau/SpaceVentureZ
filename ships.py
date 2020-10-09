@@ -15,6 +15,7 @@ class Player(Ship):
         self.x, self.y = x, y
         # storing lasers into a group
         self.lasers = pygame.sprite.Group()
+        print("This iss in the init of SHIP " , len(self.lasers.sprites()))
 
     def draw(self, window):
         self.ship = self.playerModel.get_rect() # gets the rect of image
@@ -24,7 +25,12 @@ class Player(Ship):
     def fire_laser(self, keys):
         if keys[pygame.K_SPACE]:
             new_laser = Laser(self.x, self.y, self.display)
-            self.lasers.add(new_laser)
+            if len(self.lasers.sprites()) > 11:
+                # I don't know yet
+                pass
+            else:
+                self.lasers.add(new_laser)
+            print("fire laser " , len(self.lasers.sprites()))
 
             '''laser weapon sfx'''
             # royalty free sfx from zapsplat.com
