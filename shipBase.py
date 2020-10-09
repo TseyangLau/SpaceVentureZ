@@ -14,17 +14,25 @@ class Ship:
         self.ship_img = None
         self.laser_img = None
 
+        #self.display = display
+        self.ship = None
+
     def movement(self, keys, boundary):
-        if keys[pygame.K_LEFT] and self.x > self.move_speed - 20:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.x > self.move_speed - 20:
             self.x -= self.move_speed
-        if keys[pygame.K_RIGHT] and self.x < boundary[0] - 50:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.x < boundary[0] - 50:
             self.x += self.move_speed
-        if keys[pygame.K_UP] and self.y > self.move_speed - 10:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.y > self.move_speed - 10:
             self.y -= self.move_speed
-        if keys[pygame.K_DOWN] and self.y < boundary[1] - 50 - self.move_speed:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.y < boundary[1] - 50 - self.move_speed:
             self.y += self.move_speed
 
-
+    def collision(self, obj2):
+        if self.ship.colliderect(obj2):
+            #print('Touched')
+            return True
+        else:
+            return False
 
     '''
     # Loading the image of the ship
