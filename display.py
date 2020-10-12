@@ -31,6 +31,10 @@ class Display:
         self.start_mouseover_state = False
         self.options_mouseover_state = False
 
+        ''' GAME '''
+        self.running = True
+        self.player_alive = True
+
     '''Prints out text on the screen based on location x , y'''
 
     def add_text(self, text, font, color_, display, x, y):
@@ -59,7 +63,15 @@ class Display:
         '''load sfx'''
         # royalty free sfx from zapsplat.com
         menu_onclick_sound = pygame.mixer.Sound('game_audio/menu_click.wav')
+        menu_onclick_sound.set_volume(0.8)
         menu_mouseover_sound = pygame.mixer.Sound('game_audio/menu_mouseover.wav')
+        menu_mouseover_sound.set_volume(0.7)
+
+        '''menu background music'''
+        # royalty free sfx from zapsplat.com
+        pygame.mixer.music.load('game_audio/bgm.wav')  # load menu bgm
+        pygame.mixer.music.set_volume(0.6)
+        pygame.mixer.music.play()  # play menu bgm
 
         while start:
             self.display.fill((0, 0, 0))
@@ -109,19 +121,27 @@ class Display:
                             if self.user_click:
                                 self.user_click = False
                                 menu_onclick_sound.play()  # play menu click sfx
+                                pygame.mixer.music.stop()  # stop menu bgm
                                 self.run_game()
                         if options_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
                                 menu_onclick_sound.play()  # play menu click sfx
+                                pygame.mixer.music.stop()  # stop menu bgm
                                 self.options()
             pygame.display.update()
             self.clock.tick(60)
 
     def run_game(self):
         self.display = pygame.display.set_mode((self.width, self.height))
-        start = True
-        while start:
+
+        '''in-game background music'''
+        # royalty free sfx from zapsplat.com
+        pygame.mixer.music.load('game_audio/bgm2.wav')  # load game bgm
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play()  # play game bgm
+
+        while self.running:
             self.display.fill((0, 0, 0))
             #self.add_text('Game Page', self.font, (255, 0, 0), self.display, 100, 0)
 
@@ -129,15 +149,20 @@ class Display:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
-                    start = False
+                    self.running = False
                     exit()
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
+                        pygame.mixer.music.stop()  # stop game bgm
                         self.menu()
                     if event.key == pygame.K_p:
                         self.pause = True
+                        pygame.mixer.music.pause()  # pause game bgm
                         self.paused()
-
+            if self.player_alive == False:
+                self.pause = True
+                #self.paused()
+                self.player_alive = True
             '''Run and Update game display'''
             self.run()
             pygame.display.update()
@@ -182,20 +207,24 @@ class Display:
 
     '''for pausing the game a work in progress'''
     def paused(self):
+        text = pygame.font.SysFont('times new roman', 100)
+        self.add_text("PAUSED", text, (255, 0, 0), self.display, 100, 100)
+        pygame.display.update()
+
         while self.pause:
-            text = pygame.font.SysFont('times new roman', 100)
-            self.add_text("PAUSED", text, (255, 0, 0), self.display, 100, 100)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
                 if event.type == KEYDOWN:
-                    if event.key == pygame.K_p: #unpaused
+                    if event.key == pygame.K_p:
                         self.pause = False
+                        pygame.mixer.music.unpause()  # unpause bgm
+                        #self.run_game()
                         #self.menu()
 
-        pygame.display.update()
-        self.clock.tick(15)
+            #pygame.display.update()
+            self.clock.tick(15)
 
 
 
