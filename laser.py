@@ -27,7 +27,7 @@ class Laser(Sprite):
     def update(self):
         """Move the laser up the screen"""
         # Update the decimal position of the laser.
-        self.y -= 4 #self.settings.laser_speed
+        self.y -= 5 #self.settings.laser_speed
         # Update the rect position
         self.laser.y = self.y
 
