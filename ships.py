@@ -24,11 +24,17 @@ class Player(Ship):
 
     def fire_laser(self, keys):
         if keys[pygame.K_SPACE]:
-            new_laser = Laser(self.x, self.y, self.display)
+            '''pygame.key.set_repeat(delay, interval) -> this is in milliseconds'''
+            # set delay when the space key is held down
+            pygame.key.set_repeat(500, 500)
+            # to print delay, for testing purposes
+            print(pygame.key.get_repeat())
+            
             if len(self.lasers.sprites()) > 11:
                 # I don't know yet
                 pass
             else:
+                new_laser = Laser(self.x, self.y, self.display)
                 self.lasers.add(new_laser)
             print("fire laser " , len(self.lasers.sprites()))
 
