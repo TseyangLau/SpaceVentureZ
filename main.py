@@ -29,11 +29,13 @@ class SpaceVentureZ(Display):
 
         #@alfredo does this need to be here? -isabel
         # laser settings for player ship, placed here for now.
+        '''
         self.laser_speed = 1.0
         self.laser_width = 3
         self.laser_height = 15
         self.laser_color = (60, 60, 60)
         self.lasers_allowed = 5
+        '''
 
         #@alfredo does this need to be here? -isabel
         # storing lasers into a group
