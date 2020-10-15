@@ -158,11 +158,6 @@ class Display:
                     if event.key == pygame.K_p:
                         self.pause = True
                         pygame.mixer.music.pause()  # pause game bgm
-                        self.paused()
-            if self.player_alive == False:
-                self.pause = True
-                #self.paused()
-                self.player_alive = True
             '''Run and Update game display'''
             self.run()
             pygame.display.update()
@@ -205,23 +200,18 @@ class Display:
     def run(self):
         pass
 
-    '''for pausing the game a work in progress'''
+    '''for pausing the game a work in progress press u key to upause'''
     def paused(self):
-        text = pygame.font.SysFont('times new roman', 100)
-        self.add_text("PAUSED", text, (255, 0, 0), self.display, 100, 100)
-        pygame.display.update()
-
         while self.pause:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
                 if event.type == KEYDOWN:
-                    if event.key == pygame.K_p:
+                    if event.key == pygame.K_u:
                         self.pause = False
                         pygame.mixer.music.unpause()  # unpause bgm
-                        #self.run_game()
-                        #self.menu()
+                    
 
             #pygame.display.update()
             self.clock.tick(15)
