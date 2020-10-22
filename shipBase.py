@@ -1,12 +1,12 @@
-import pygame
+from display import *
+import random
 
-
-class Ship:
+class Ship(Display):
 
     """A class to create the player/enemy ship."""
-
     # default constructor
     def __init__(self, hp, x, y, speed):
+        Display.__init__(self)
         self.health = hp
         self.x = x
         self.y = y
@@ -14,25 +14,23 @@ class Ship:
         self.ship_img = None
         self.laser_img = None
 
+        self.dx, self.dy = self.move_speed, self.move_speed
+
         #self.display = display
         self.ship = None
 
-    def movement(self, keys, boundary):
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.x > self.move_speed - 20:
-            self.x -= self.move_speed
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.x < boundary[0] - 50:
-            self.x += self.move_speed
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.y > self.move_speed - 10:
-            self.y -= self.move_speed
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.y < boundary[1] - 50 - self.move_speed:
-            self.y += self.move_speed
+    def movement(self):
+        if self.x >= self.width - 64 or self.x <= 0:
+            self.dx = -self.dx
+        self.x += self.dx
+        if self.y >= self.height - 500 - 64 or self.y <= 50:
+            self.dy = -self.dy
+        self.y += self.dy
 
     def collision(self, obj2):
-        if self.ship.colliderect(obj2):
-            #print('Touched')
-            return True
-        else:
-            return False
+        return self.ship.colliderect(obj2)
+
+
 
     '''
     # Loading the image of the ship
