@@ -17,7 +17,6 @@ class Laser(Sprite):
 
         # Create a laser rect at (0,0) and then set current position.
         # self.x, self.y
-
         self.laser = pygame.Rect(self.x+31, self.y, 5, 5) #spawning
         #self.rect.midtop = ai_game.ship.rect.midtop
 
@@ -34,6 +33,5 @@ class Laser(Sprite):
     def draw_laser(self):
         """Draw the laser to the screen"""
         pygame.draw.rect(self.screen, self.color, self.laser)
-        #weapon_laser_sound = pygame.mixer.Sound('game_audio/weapon_laser.wav')
-        #weapon_laser_sound.play()
+
 
