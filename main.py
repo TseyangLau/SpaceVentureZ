@@ -13,50 +13,46 @@ class SpaceVentureZ(Display):
         self.collision_invincibility = False
         '''creation of entities'''
         self.player_ship = Player(self.playerHealthPoints, 400, 400, 10, self.display)  # added display
-        self.black_hole = BlackHole(random.randint(100, self.width - 100), random.randint(100, 400))
+        self.black_hole = BlackHole(random.randrange(100, self.width - 100, 64), random.randrange(100, 400, 64))
         #self.asteroid = Asteroids(random.randint(100, self.width - 100), random.randint(100, self.height - 500))
 
-        self.asteroids = []
+        # ASTEROID SPAWNING
+        self.asteroids = list()
         for x in range(10):
-             self.asteroids.append(Asteroids(random.randint(100, self.width - 100), random.randint(100, self.height - 500)))
-        # # # initialization of enemies here (spawn too many and game will crash lol)
-        # lets set a max ?? -isabel
+            self.asteroids.append(Asteroids(random.randint(100, self.width - 100),
+                                            random.randint(100, self.height - 500)))
+
+        # ENEMY SPAWNING
         self.enemy_max = 50
         self.enemies = list()
         for x in range(10):
             # get y spawn
-            lower = random.randint(0, self.black_hole.y)
-            upper = random.randint(self.black_hole.y + 64, 800)
-            choice = random.randint(0, 1)
-            if choice == 0:
-                choice = lower
-            if choice == 1:
-                choice = upper
+            y_spawn = random.randrange(0, self.height - 200, 64)
+            while y_spawn == self.black_hole.y:
+                y_spawn = random.randrange(0, self.height - 200, 64)
             # spawn enemy
-            self.enemies.append(Enemy(self.enemyHealthPoints, random.randint(0, self.width) - 200, choice, 2))
+            self.enemies.append(Enemy(self.enemyHealthPoints, random.randrange(0, self.width - 200, 64), y_spawn, 2))
 
     def run(self):
         # check screen size in case of resize
         w, h = pygame.display.get_surface().get_size()
         keys = pygame.key.get_pressed()
 
-        '''In Game Code'''
+        ''' PLAYER HANDLING '''
         self.player_ship.movement(keys, (w, h))
         self.player_ship.fire_laser(keys)
-
-        '''Draw objects on the display '''
-
         self.player_ship.draw(self.display)
+
+        ''' BLACK HOLE HANDLING '''
         self.black_hole.draw()
         for x in self.asteroids:
             x.draw()
             x.move()
-            if(x.hp <= 0):
+            if x.hp <= 0:
                 self.asteroids.remove(x)
 
         for x in self.enemies:
             x.draw(self.display)
-
 
         '''draws paused on display and handles unpause'''
         if self.pause:
@@ -65,7 +61,7 @@ class SpaceVentureZ(Display):
         '''asteroid handling for testing'''
        # self.asteroid.move()
 
-        ''' Start of Enemy Ship Handling'''
+        ''' ENEMY HANDLING '''
         # while self.pause == False:
         for x in self.enemies:
             # x.draw(self.display) draws it before handling
@@ -101,7 +97,6 @@ class SpaceVentureZ(Display):
                     # self.enemies.append(Enemy(self.playerHealthPoints, random.randint(0, 750), random.randint(0, 750), 2))
                 else:
                     x.x, x.y = random.randint(64, self.width-64), random.randint(64, self.height-64)
-        '''End of enemy ship handling'''
 
         ''' BLACK HOLE HANDLING for player ship '''
         if self.black_hole.entered_bh(self.player_ship.ship):
@@ -126,6 +121,9 @@ class SpaceVentureZ(Display):
             for x in self.asteroids:
                 if x.coll(p_laser.laser):
                     x.hp -= 5
+
+        '''Drawing the player ship health bar'''
+        self.player_ship.draw_health_bar(self.display, 5, 5, self.player_ship.health)
 
 
 if __name__ == '__main__':
