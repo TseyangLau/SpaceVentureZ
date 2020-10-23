@@ -60,6 +60,19 @@ class Player(Ship):
             laser.draw_laser()
             laser.update()
 
+    def draw_health_bar(self, display, x, y, max_health):
+        # if max_health < 0:
+        #   max_health = 0
+        max_health = max(max_health, 0)
+        BAR_LENGTH = 100
+        BAR_HEIGHT = 10
+        fill = (max_health / 100) * BAR_LENGTH
+        outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+        fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+        pygame.draw.rect(display, (0, 255, 0), fill_rect)
+        pygame.draw.rect(display, (255, 255, 255), outline_rect, 2)
+
+
 class Enemy:
     # class variable to keep track of all enemy hit boxes
     enemies = list()
