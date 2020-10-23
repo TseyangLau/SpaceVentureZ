@@ -1,4 +1,4 @@
-from ships from display import *
+from display import *
 import random 
 
 '''Obstacle cvbe Class for obstacles in the game 
