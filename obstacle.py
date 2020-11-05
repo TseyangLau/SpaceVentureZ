@@ -65,19 +65,16 @@ class BlackHole:
 class Asteroids(Obstacle):
     def __init__(self, x, y):
         Obstacle.__init__(self, x, y)
-        '''temp until image is loaded'''
-        self.color = (254, 7, 0)
+        # health of asteroid
         self.hp = 5
         '''image and rect handling'''
-        self.as_image = None
+        self.as_image = pygame.image.load("game_images/asteroid.png")
     '''draws the asteroids on display'''
     def draw(self):
-        self.ob_rect = pygame.Rect(self.x, self.y, self.w, self.h)
-        # self.ob_rect = self.as_image.get_rect()
-        # self.ob_rect.x, self.ob_rect.y, self.ob_rect.w, self.ob_rect.h = self.x, self.y, self.w, self.h
-        # self.window.blit(self.as_image, self.ob_rect)
-        pygame.draw.rect(self.window, self.color, self.ob_rect)
+        self.ob_rect = self.as_image.get_rect()
+        self.ob_rect.x, self.ob_rect.y, self.ob_rect.w, self.ob_rect.h = self.x, self.y, self.w, self.h
+        self.window.blit(self.as_image, self.ob_rect)
 
-    '''explosion? image to be used when removing include sound here'''
+    '''explosion? debating whether to keep this image to be used when removing include sound here'''
     def explode(self):
         pass
