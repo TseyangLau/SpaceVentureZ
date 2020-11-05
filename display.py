@@ -200,23 +200,42 @@ class Display:
         text = pygame.font.SysFont('times new roman', 100)
         self.add_text("PAUSED", text, (255, 0, 0), self.display, self.width / 4, self.height / 4)
 
-        restart = pygame.Rect(self.width/3, self.height/2, 100, 40)
-        pygame.draw.rect(self.display, (192, 192, 192), restart)
-        self.add_text('Restart', self.font, (0, 0, 0), self.display, self.width/3, self.height/2)
+       '''Add buttons with images and creates the buttons rect'''
 
-        options = pygame.Rect(self.width/3+100, self.height/2, 100,40)
+        restart = pygame.image.load("game_images/restart.png")
+        re_rect = restart.get_rect()
+        re_rect.x, re_rect.y, re_rect.w, re_rect.h = self.width/4 - 50, self.height/3+50, 196, 80
+        self.display.blit(restart, re_rect)
+
+        resume = pygame.image.load("game_images/resume.png")
+        res_rect = resume.get_rect()
+        res_rect.x, res_rect.y, res_rect.w, res_rect.h = re_rect.x+res_rect.w+50, self.height/3 + 50, 196, 80
+        self.display.blit(resume, res_rect)
+
+        settings = pygame.image.load("game_images/settings.png")
+        set_rect = settings.get_rect()
+        set_rect.x, set_rect.y, set_rect.w, set_rect.h = 0, 0, 40, 40
+        self.display.blit(settings, set_rect)
 
         pygame.display.update()
         while self.pause:
+            x, y = pygame.mouse.get_pos()
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
-                if event.type == KEYDOWN:
-                    if event.key == pygame.K_u:
-                        self.pause = False
-                        pygame.mixer.music.unpause()  # unpause bgm
-
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.user_click = True
+                        if res_rect.collidepoint(x, y):
+                            self.pause = False
+                            self.user_click = False
+                            pygame.mixer.music.unpause()  # unpause bgm
+                        if set_rect.collidepoint(x, y):
+                            self.pause = False
+                            self.user_click = False
+                            self.options()
 
 '''
 NOTE: options and menu are incomplete
