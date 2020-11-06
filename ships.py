@@ -41,7 +41,7 @@ class Player(Ship):
             # to print delay, for testing purposes
             print(pygame.key.get_repeat())
 
-            if len(self.lasers.sprites()) >= 10:
+            if len(self.lasers.sprites()) >= 70:
                 # I don't know yet
                 pass
             else:
