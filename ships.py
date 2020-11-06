@@ -64,16 +64,29 @@ class Player(Ship):
         # if max_health < 0:
         #   max_health = 0
         max_health = max(max_health, 0)
-        BAR_LENGTH = 100
+        BAR_LENGTH = 64
         BAR_HEIGHT = 10
         fill = (max_health / 100) * BAR_LENGTH
         outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
         fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+        # the tuple after display is an rgb value, for the color of the bar and bar background
         pygame.draw.rect(display, (0, 255, 0), fill_rect)
         pygame.draw.rect(display, (255, 255, 255), outline_rect, 2)
 
 
+class Enemy2(Ship):
+    
+    def __init__(self, hp, x, y, speed):
+        Ship.__init__(self, hp, x, y, speed)
+        self.enemyModel = pygame.image.load('game_images/Enemy.png')
+        self.ship = self.enemyModel.get_rect()  # gets the rect of image
+
+    def draw(self):
+        self.ship.x, self.ship.y, self.ship.w, self.ship.h = self.x, self.y, 64, 64
+        self.display.blit(self.enemyModel, self.ship)
+
 class Enemy:
+    
     # class variable to keep track of all enemy hit boxes
     enemies = list()
     direction = 0
