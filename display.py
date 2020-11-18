@@ -31,6 +31,9 @@ class Display:
         self.start_mouseover_state = False
         self.options_mouseover_state = False
 
+        '''user sound state variables'''
+        self.is_sound_on = True
+
         '''variable that handles when the game is over'''
         self.game_over = False
 
@@ -223,18 +226,26 @@ class Display:
 
         sound_text = pygame.image.load("game_images/sound-text.png")
         sound_rect = sound_text.get_rect()
-        sound_rect.x, sound_rect.y, sound_rect.w, sound_rect.h = self.width / 4, re_rect.y + re_rect.h + 50, 123, 30
-        self.display.blit(sound_text, sound_rect)
+        sound_rect.x, sound_rect.y, sound_rect.w, sound_rect.h = self.width/4 - 10, re_rect.y + re_rect.h + 50, 123, 40
 
         sound_on = pygame.image.load("game_images/sound-on-text.png")
+        sound_on_s = pygame.image.load("game_images/sound-on-s-text.png")
         son_rect = sound_on.get_rect()
-        son_rect.x, son_rect.y, son_rect.w, son_rect.h = sound_rect.x + sound_rect.w + 100, sound_rect.y, 36, 30
-        self.display.blit(sound_on, son_rect)
+        son_rect.x, son_rect.y, son_rect.w, son_rect.h = res_rect.x, sound_rect.y, 75, 40
 
         sound_off = pygame.image.load("game_images/sound-off-text.png")
+        sound_off_s = pygame.image.load("game_images/sound-off-s-text.png")
         soff_rect = sound_off.get_rect()
-        soff_rect.x, soff_rect.y, soff_rect.w, soff_rect.h = son_rect.x + son_rect.w + 50, son_rect.y, 55, 30
-        self.display.blit(sound_off, soff_rect)
+        soff_rect.x, soff_rect.y, soff_rect.w, soff_rect.h = son_rect.x + son_rect.w + 45, son_rect.y, 75, 40
+
+        '''display sound buttons'''
+        self.display.blit(sound_text, sound_rect)
+        if self.is_sound_on:  # initial state
+            self.display.blit(sound_on_s, son_rect)
+            self.display.blit(sound_off, soff_rect)
+        else:
+            self.display.blit(sound_on, son_rect)
+            self.display.blit(sound_off_s, soff_rect)
 
         pygame.display.update()
         while self.pause:
@@ -250,7 +261,7 @@ class Display:
                         if res_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
-                            #pygame.mixer.music.set_volume(0.5)  # increase music volume
+                            # pygame.mixer.music.set_volume(0.5)  # increase music volume
                         if set_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
@@ -259,10 +270,22 @@ class Display:
                             self.pause = False
                             self.user_click = False
                             self.restart()
-                        '''if son_rect.collidepoint(x, y):
-                            pygame.mixer.music.unpause()
-                        if soff_rect.collidepoint(x, y):
-                            pygame.mixer.music.pause()'''
+                        if son_rect.collidepoint(x, y):  # if user select on button
+                            self.display.fill(0, soff_rect)
+                            self.display.blit(sound_on_s, son_rect)
+                            self.display.blit(sound_off, soff_rect)
+                            pygame.display.update()
+                            # pygame.mixer.music.unpause()
+                            self.is_sound_on = True
+                            self.user_click = False
+                        if soff_rect.collidepoint(x, y):  # if user select off button
+                            self.display.fill(0, son_rect)
+                            self.display.blit(sound_on, son_rect)
+                            self.display.blit(sound_off_s, soff_rect)
+                            pygame.display.update()
+                            # pygame.mixer.music.pause()
+                            self.is_sound_on = False
+                            self.user_click = False
 
     def end_screen(self, result):
         panel = Rect(0, 0, 750, 800)
