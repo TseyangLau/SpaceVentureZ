@@ -31,6 +31,9 @@ class Display:
         self.start_mouseover_state = False
         self.options_mouseover_state = False
 
+        '''variable that handles when the game is over'''
+        self.game_over = False
+
         ''' GAME '''
 
     '''Prints out text on the screen based on location x , y'''
@@ -53,9 +56,10 @@ class Display:
         '''Load's image'''
         game_logo = pygame.image.load('game_images/SpaceVentureZ.png').convert()
         start_game = pygame.image.load('game_images/startButton.png').convert()
-        options = pygame.image.load('game_images/optionButton.png').convert()
+        #options = pygame.image.load('game_images/optionButton.png').convert()
         screen = pygame.image.load('game_images/background.png').convert()
         white_back = pygame.image.load('game_images/white_back.png').convert()
+        star_point = pygame.image.load('game_images/star-point.png').convert()
 
         '''load sfx'''
         # royalty free sfx from zapsplat.com
@@ -77,21 +81,21 @@ class Display:
             self.add_image(screen, self.width, self.height, self.display, 0, 0)
             self.add_image(game_logo, 450, 350, self.display, self.width/5, 0)
             self.add_image(start_game, 250, 85, self.display, self.width/3, 200)
-            self.add_image(options, 250, 88, self.display, self.width/3, 288)
+            #self.add_image(options, 250, 88, self.display, self.width/3, 288)
 
             '''gets user mouse click coordinates '''
             x, y = pygame.mouse.get_pos()
-            mouse = pygame.mouse.get_pos()
+            mouse = pygame.mouse.get_pos() #this is the same as the one above.. why repeat?
 
             '''Gets the rect from the images loaded and sets the position on display'''
             start_game_b = start_game.get_rect()
             start_game_b.x, start_game_b.y, start_game_b.w, start_game_b.h = (self.width/3, 200, 250, 85)
-            options_b = options.get_rect()
-            options_b.x, options_b.y, options_b.w, options_b.h = (self.width/3, 288, 250, 88)
+            # options_b = options.get_rect()
+            # options_b.x, options_b.y, options_b.w, options_b.h = (self.width/3, 288, 250, 88)
 
             '''get mouseover state'''
             start_mouseover = start_game_b.x + start_game_b.w > mouse[0] > start_game_b.x and start_game_b.y + start_game_b.h > mouse[1] > start_game_b.y
-            options_mouseover = options_b.x + options_b.w > mouse[0] > options_b.x and options_b.y + options_b.h > mouse[1] > options_b.y
+            #options_mouseover = options_b.x + options_b.w > mouse[0] > options_b.x and options_b.y + options_b.h > mouse[1] > options_b.y
 
             '''pygame event handling, exit, mouseover, and user mouse click handling'''
             for event in pygame.event.get():
@@ -105,12 +109,12 @@ class Display:
                         self.start_mouseover_state = True
                     if start_mouseover is False and self.start_mouseover_state is True:
                         self.start_mouseover_state = False  # reset mouseover
-                    if options_mouseover and self.options_mouseover_state is False:
-                        self.hovered_image(options, white_back, 250, 88, self.display, self.width/3, 288)
-                        menu_mouseover_sound.play()  # play mouseover sfx
-                        self.options_mouseover_state = True
-                    if options_mouseover is False and self.options_mouseover_state is True:
-                        self.options_mouseover_state = False  # reset mouseover
+                    # if options_mouseover and self.options_mouseover_state is False:
+                    #     self.hovered_image(options, white_back, 250, 88, self.display, self.width/3, 288)
+                    #     menu_mouseover_sound.play()  # play mouseover sfx
+                    #     self.options_mouseover_state = True
+                    # if options_mouseover is False and self.options_mouseover_state is True:
+                    #     self.options_mouseover_state = False  # reset mouseover
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.user_click = True
@@ -119,13 +123,13 @@ class Display:
                                 self.user_click = False
                                 menu_onclick_sound.play()  # play menu click sfx
                                 pygame.mixer.music.stop()  # stop menu bgm
-                                self.run_game()
-                        if options_b.collidepoint(x, y):
-                            if self.user_click:
-                                self.user_click = False
-                                menu_onclick_sound.play()  # play menu click sfx
-                                pygame.mixer.music.stop()  # stop menu bgm
-                                self.options()
+                                self.restart()
+                        # if options_b.collidepoint(x, y):
+                        #     if self.user_click:
+                        #         self.user_click = False
+                        #         menu_onclick_sound.play()  # play menu click sfx
+                        #         pygame.mixer.music.stop()  # stop menu bgm
+                        #         self.options()
             pygame.display.update()
             self.clock.tick(60)
 
@@ -149,11 +153,11 @@ class Display:
                     exit()
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
-                        pygame.mixer.music.stop()  # stop game bgm
+                        #pygame.mixer.music.stop()  # stop game bgm
                         self.menu()
                     if event.key == pygame.K_p:
                         self.pause = True
-                        pygame.mixer.music.pause()  # pause game bgm
+                        #pygame.mixer.music.set_volume(0.1)  # reduce music volume
             '''Run and Update game display'''
             self.run()
             pygame.display.update()
@@ -195,12 +199,12 @@ class Display:
     def run(self):
         pass
 
-    '''for pausing the game a work in progress'''
+    '''display when pausing the game'''
     def paused(self):
-        text = pygame.font.SysFont('times new roman', 100)
-        self.add_text("PAUSED", text, (255, 0, 0), self.display, self.width / 4, self.height / 4)
+        # text = pygame.font.SysFont('times new roman', 100)
+        # self.add_text("PAUSED", text, (255, 0, 0), self.display, self.width / 4, self.height / 4)
 
-       '''Add buttons with images and creates the buttons rect'''
+        '''Add buttons with images and creates the buttons rect'''
 
         restart = pygame.image.load("game_images/restart.png")
         re_rect = restart.get_rect()
@@ -217,6 +221,21 @@ class Display:
         set_rect.x, set_rect.y, set_rect.w, set_rect.h = 0, 0, 40, 40
         self.display.blit(settings, set_rect)
 
+        sound_text = pygame.image.load("game_images/sound-text.png")
+        sound_rect = sound_text.get_rect()
+        sound_rect.x, sound_rect.y, sound_rect.w, sound_rect.h = self.width / 4, re_rect.y + re_rect.h + 50, 123, 30
+        self.display.blit(sound_text, sound_rect)
+
+        sound_on = pygame.image.load("game_images/sound-on-text.png")
+        son_rect = sound_on.get_rect()
+        son_rect.x, son_rect.y, son_rect.w, son_rect.h = sound_rect.x + sound_rect.w + 100, sound_rect.y, 36, 30
+        self.display.blit(sound_on, son_rect)
+
+        sound_off = pygame.image.load("game_images/sound-off-text.png")
+        soff_rect = sound_off.get_rect()
+        soff_rect.x, soff_rect.y, soff_rect.w, soff_rect.h = son_rect.x + son_rect.w + 50, son_rect.y, 55, 30
+        self.display.blit(sound_off, soff_rect)
+
         pygame.display.update()
         while self.pause:
             x, y = pygame.mouse.get_pos()
@@ -231,11 +250,51 @@ class Display:
                         if res_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
-                            pygame.mixer.music.unpause()  # unpause bgm
+                            #pygame.mixer.music.set_volume(0.5)  # increase music volume
                         if set_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
                             self.options()
+                        if re_rect.collidepoint(x,y):
+                            self.pause = False
+                            self.user_click = False
+                            self.restart()
+                        '''if son_rect.collidepoint(x, y):
+                            pygame.mixer.music.unpause()
+                        if soff_rect.collidepoint(x, y):
+                            pygame.mixer.music.pause()'''
+
+    def end_screen(self, result):
+        panel = Rect(0, 0, 750, 800)
+        pygame.draw.rect(self.display, (0, 0, 0), panel)
+
+        font = pygame.font.SysFont('times new roman', 100)
+        text = font.render(result, True, (255, 0, 0))
+        text_rect = text.get_rect(center=(self.width/2, self.height/2 - 50))
+        self.display.blit(text, text_rect)
+
+        restart = pygame.image.load("game_images/restart.png")
+        re_rect = restart.get_rect()
+        re_rect.x, re_rect.y, re_rect.w, re_rect.h = self.width / 2 - 100, self.height / 3 + 150, 196, 80
+        self.display.blit(restart, re_rect)
+
+        pygame.display.update()
+        while self.game_over:
+            x, y = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.user_click = True
+                        if re_rect.collidepoint(x, y):
+                            self.game_over = False
+                            self.user_click = False
+                            self.restart()
+
+    def restart(self):
+        pass
 
 '''
 NOTE: options and menu are incomplete
