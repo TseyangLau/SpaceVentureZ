@@ -330,12 +330,12 @@ class Display:
     
     def update_background(self):
         """Handles all the movement of the background. Decrements y-coordinates every re-draw."""
-        self.bgY1 -= self.moving_speed
-        self.bgY2 -= self.moving_speed
-        if self.bgY1 <= -self.rectBGimg.height:
-            self.bgY1 = self.rectBGimg.height
-        if self.bgY2 <= -self.rectBGimg.height:
-            self.bgY2 = self.rectBGimg.height
+        self.bgY1 += self.moving_speed
+        self.bgY2 += self.moving_speed
+        if self.bgY1 >= self.rectBGimg.height:
+            self.bgY1 = -self.rectBGimg.height
+        if self.bgY2 >= self.rectBGimg.height:
+            self.bgY2 = -self.rectBGimg.height
 
     def render_background(self):
         """Draws the final background using both coordinates (top left corner and bottom right corner."""
