@@ -36,6 +36,15 @@ class Display:
 
         '''variable that handles when the game is over'''
         self.game_over = False
+        
+        '''background that is going to be used for scrolling'''
+        self.bgimage = pygame.image.load('game_images/sv_bg2.png')
+        self.rectBGimg = self.bgimage.get_rect()
+        self.bgY1 = 0
+        self.bgX1 = 0
+        self.bgY2 = self.rectBGimg.height
+        self.bgX2 = 0
+        self.moving_speed = 5
 
         ''' GAME '''
 
@@ -318,6 +327,20 @@ class Display:
 
     def restart(self):
         pass
+    
+    def update_background(self):
+        """Handles all the movement of the background. Decrements y-coordinates every re-draw."""
+        self.bgY1 -= self.moving_speed
+        self.bgY2 -= self.moving_speed
+        if self.bgY1 <= -self.rectBGimg.height:
+            self.bgY1 = self.rectBGimg.height
+        if self.bgY2 <= -self.rectBGimg.height:
+            self.bgY2 = self.rectBGimg.height
+
+    def render_background(self):
+        """Draws the final background using both coordinates (top left corner and bottom right corner."""
+        self.display.blit(self.bgimage, (self.bgX1, self.bgY1))
+        self.display.blit(self.bgimage, (self.bgX2, self.bgY2))
 
 '''
 NOTE: options and menu are incomplete
