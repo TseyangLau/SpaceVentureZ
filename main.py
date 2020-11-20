@@ -41,6 +41,10 @@ class SpaceVentureZ(Display):
         # check screen size in case of resize
         w, h = pygame.display.get_surface().get_size()
         keys = pygame.key.get_pressed()
+        
+        '''Scrolling Background Drawing. Has to be first to be in the back/bottom of other images.'''
+        self.update_background()
+        self.render_background()
 
         ''' PLAYER HANDLING '''
         self.player_ship.movement(keys, (w, h))
