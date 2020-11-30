@@ -15,7 +15,11 @@ class Player(Ship):
         self.x, self.y = x, y
         # storing lasers into a group
         self.lasers = pygame.sprite.Group()
-        print("This iss in the init of SHIP " , len(self.lasers.sprites()))
+        #print("This iss in the init of SHIP " , len(self.lasers.sprites()))
+
+        '''load sfx'''
+        self.weapon_laser_sound = pygame.mixer.Sound('game_audio/weapon_laser.wav')
+        self.weapon_laser_sound.set_volume(0.2)
 
     def draw(self, window):
         self.ship = self.playerModel.get_rect() # gets the rect of image
@@ -39,21 +43,18 @@ class Player(Ship):
             # set delay when the space key is held down
             #pygame.key.set_repeat(1, 100)
             # to print delay, for testing purposes
-            print(pygame.key.get_repeat())
+            #print(pygame.key.get_repeat())
 
-            if len(self.lasers.sprites()) >= 70:
+            if len(self.lasers.sprites()) >= 60:
                 # I don't know yet
                 pass
             else:
                 new_laser = Laser(self.x, self.y, self.display)
                 self.lasers.add(new_laser)
-            print("fire laser " , len(self.lasers.sprites()))
+            #print("fire laser " , len(self.lasers.sprites()))
 
-            '''laser weapon sfx'''
-            # royalty free sfx from zapsplat.com
-            weapon_laser_sound = pygame.mixer.Sound('game_audio/weapon_laser.wav')  # load sfx
-            weapon_laser_sound.set_volume(0.3)
-            weapon_laser_sound.play()  # play sfx
+            if self.is_sound_on:  # initial state
+                self.weapon_laser_sound.play()  # play laser sfx
 
             # new_laser.update() #moving (should be updating)
         for laser in self.lasers.sprites():
@@ -75,18 +76,27 @@ class Player(Ship):
 
 
 class Enemy2(Ship):
-    
     def __init__(self, hp, x, y, speed):
         Ship.__init__(self, hp, x, y, speed)
-        self.enemyModel = pygame.image.load('game_images/Enemy.png')
+        self.enemyModel = pygame.image.load('game_images/boss.png')
         self.ship = self.enemyModel.get_rect()  # gets the rect of image
 
     def draw(self):
         self.ship.x, self.ship.y, self.ship.w, self.ship.h = self.x, self.y, 64, 64
         self.display.blit(self.enemyModel, self.ship)
 
+    def auto_movement(self, target):
+        dx, dy = target.x - self.x, target.y - self.y
+        dist = math.hypot(dx, dy)
+        dx, dy = dx / dist, dy / dist
+        self.x += dx * self.move_speed
+        self.y += dy * self.move_speed
+
+    def collision(self, obj2):
+        return self.ship.colliderect(obj2)
+
+
 class Enemy:
-    
     # class variable to keep track of all enemy hit boxes
     enemies = list()
     direction = 0
