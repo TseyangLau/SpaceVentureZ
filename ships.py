@@ -18,6 +18,7 @@ class Player(Ship):
         #print("This iss in the init of SHIP " , len(self.lasers.sprites()))
 
         '''load sfx'''
+        # royalty free sfx from zapsplat.com
         self.weapon_laser_sound = pygame.mixer.Sound('game_audio/weapon_laser.wav')
         self.weapon_laser_sound.set_volume(0.2)
 
@@ -79,11 +80,16 @@ class Enemy2(Ship):
     def __init__(self, hp, x, y, speed):
         Ship.__init__(self, hp, x, y, speed)
         self.enemyModel = pygame.image.load('game_images/boss.png')
+        self.bossHit = pygame.image.load('game_images/boss_hit.png')
         self.ship = self.enemyModel.get_rect()  # gets the rect of image
+        self.boss_is_hit = False
 
     def draw(self):
         self.ship.x, self.ship.y, self.ship.w, self.ship.h = self.x, self.y, 64, 64
-        self.display.blit(self.enemyModel, self.ship)
+        if self.boss_is_hit is False:
+            self.display.blit(self.enemyModel, self.ship)
+        else:
+            self.display.blit(self.bossHit, self.ship)
 
     def auto_movement(self, target):
         dx, dy = target.x - self.x, target.y - self.y
