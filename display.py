@@ -335,6 +335,7 @@ class Display:
                         if re_rect.collidepoint(x, y):
                             self.game_over = False
                             self.user_click = False
+                            pygame.mixer.music.stop() # stop endscreen sfx
                             self.restart()
 
     def restart(self):
