@@ -79,14 +79,14 @@ class SpaceVentureZ(Display):
                 else:
                     self.obstacles_.append(HealthPrize(x.x, x.y))
             if x.collision(self.player_ship.ship):
-                if isinstance(x, Asteroids):
+                if type(x) is Asteroids:
                     self.player_ship.health -= 5
-                elif isinstance(x, HealthPrize):
+                elif type(x) is HealthPrize:
                     self.player_ship.health += 25
                     if self.player_ship.health >= self.playerHealthPoints:
                         self.player_ship.health = self.playerHealthPoints
                     self.obstacles_.remove(x)
-                elif isinstance(x, StarPrize):
+                elif type(x) is StarPrize:
                     self.score += x.points
                     self.obstacles_.remove(x)
             if isinstance(x, StarPrize):
