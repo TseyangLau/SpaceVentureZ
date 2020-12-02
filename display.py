@@ -7,7 +7,8 @@ class Display:
 
     def __init__(self):
         """ initialize pygame and creates game title"""
-        pygame.mixer.pre_init(44100, -16, 1, 512)  # for audio lag reduction
+        # pygame.mixer.pre_init(44100, -16, 1, 512)  # default
+        pygame.mixer.pre_init(20000, -16, 1, 512)
         pygame.init()
         self.clock = pygame.time.Clock()
         pygame.display.set_caption('SpaceVentureZ')
@@ -80,11 +81,12 @@ class Display:
         menu_mouseover_sound = pygame.mixer.Sound('game_audio/menu_mouseover.wav')
         menu_mouseover_sound.set_volume(0.7)
 
-        '''menu background music'''
+        '''load bgm'''
         # royalty free sfx from zapsplat.com
-        #pygame.mixer.music.load('game_audio/bg_menu.wav')  # load menu bgm
-        #pygame.mixer.music.set_volume(0.6)
-        #pygame.mixer.music.play()  # play menu bgm
+        pygame.mixer.music.load('game_audio/bg_menu.wav')  # load menu bgm
+        pygame.mixer.music.set_volume(0.5)
+        if self.is_sound_on:
+            pygame.mixer.music.play()  # play menu bgm
 
         while start:
             self.display.fill((0, 0, 0))
@@ -117,7 +119,8 @@ class Display:
                 if event.type == MOUSEMOTION:
                     if start_mouseover and self.start_mouseover_state is False:
                         self.hovered_image(start_game, white_back, 250, 85, self.display, self.width/3, 200)
-                        menu_mouseover_sound.play()  # play mouseover sfx
+                        if self.is_sound_on:
+                            menu_mouseover_sound.play()  # play mouseover sfx
                         self.start_mouseover_state = True
                     if start_mouseover is False and self.start_mouseover_state is True:
                         self.start_mouseover_state = False  # reset mouseover
@@ -133,7 +136,8 @@ class Display:
                         if start_game_b.collidepoint(x, y):
                             if self.user_click:
                                 self.user_click = False
-                                menu_onclick_sound.play()  # play menu click sfx
+                                if self.is_sound_on:
+                                    menu_onclick_sound.play()  # play menu click sfx
                                 pygame.mixer.music.stop()  # stop menu bgm
                                 self.restart()
                         # if options_b.collidepoint(x, y):
@@ -149,9 +153,10 @@ class Display:
 
         '''in-game background music'''
         # royalty free sfx from zapsplat.com
-        #pygame.mixer.music.load('game_audio/bg_game.wav')  # load game bgm
-        #pygame.mixer.music.set_volume(0.5)
-        #pygame.mixer.music.play()  # play game bgm
+        pygame.mixer.music.load('game_audio/bg_game.wav')  # load game bgm
+        pygame.mixer.music.set_volume(0.5)
+        if self.is_sound_on:
+            pygame.mixer.music.play()  # play menu bgm
 
         running = True
         while running:
@@ -165,11 +170,11 @@ class Display:
                     exit()
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
-                        #pygame.mixer.music.stop()  # stop game bgm
+                        pygame.mixer.music.stop()  # stop game bgm
                         self.menu()
                     if event.key == pygame.K_p:
                         self.pause = True
-                        #pygame.mixer.music.set_volume(0.1)  # reduce music volume
+                        pygame.mixer.music.set_volume(0.1)  # reduce music volume
             '''Run and Update game display'''
             self.run()
             pygame.display.update()
@@ -270,7 +275,7 @@ class Display:
                         if res_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
-                            # pygame.mixer.music.set_volume(0.5)  # increase music volume
+                            pygame.mixer.music.set_volume(0.5)  # increase music volume
                         if set_rect.collidepoint(x, y):
                             self.pause = False
                             self.user_click = False
@@ -284,7 +289,10 @@ class Display:
                             self.display.blit(sound_on_s, son_rect)
                             self.display.blit(sound_off, soff_rect)
                             pygame.display.update()
-                            # pygame.mixer.music.unpause()
+                            if self.is_sound_on == False and self.is_restarting == True:
+                                pygame.mixer.music.play()  # play menu bgm
+                            else:
+                                pygame.mixer.music.unpause()
                             self.is_sound_on = True
                             self.user_click = False
                         if soff_rect.collidepoint(x, y):  # if user select off button
@@ -292,9 +300,10 @@ class Display:
                             self.display.blit(sound_on, son_rect)
                             self.display.blit(sound_off_s, soff_rect)
                             pygame.display.update()
-                            # pygame.mixer.music.pause()
+                            pygame.mixer.music.pause()  # pause all music
                             self.is_sound_on = False
                             self.user_click = False
+                        self.is_restarting = False
 
     def end_screen(self, result):
         panel = Rect(0, 0, 750, 800)
