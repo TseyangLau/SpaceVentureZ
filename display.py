@@ -310,6 +310,18 @@ class Display:
         re_rect.x, re_rect.y, re_rect.w, re_rect.h = self.width / 2 - 100, self.height / 3 + 150, 196, 80
         self.display.blit(restart, re_rect)
 
+        '''load sfx'''
+        # royalty free sfx from zapsplat.com
+        pygame.mixer.music.stop()  # stop game bgm
+        if result == "Victory" and self.is_sound_on:
+            pygame.mixer.music.load('game_audio/end_victory.wav')
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play()  # play victory sfx
+        if result == "Defeat" and self.is_sound_on:
+            pygame.mixer.music.load('game_audio/end_defeat.wav')
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play()  # play defeat sfx
+        
         pygame.display.update()
         while self.game_over:
             x, y = pygame.mouse.get_pos()
