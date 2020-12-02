@@ -24,7 +24,14 @@ class SpaceVentureZ(Display):
 
         # track if player restarted game
         self.is_restarting = False
-
+        '''load sfx'''
+        # royalty free sfx from zapsplat.com
+        self.asteroid_death_sound = pygame.mixer.Sound('game_audio/death_asteroid.wav')
+        self.asteroid_death_sound.set_volume(0.6)
+        self.enemy_death_sound = pygame.mixer.Sound('game_audio/death_enemy.wav')
+        self.enemy_death_sound.set_volume(0.4)
+        self.player_death_sound = pygame.mixer.Sound('game_audio/death_player.wav')
+        self.player_death_sound.set_volume(0.4)
         '''creation of entities'''
         self.player_ship = Player(self.playerHealthPoints, self.width/2, self.height-64-20, 10, self.display)  # added display
         self.black_hole = BlackHole(self.width/2, 350)
@@ -73,6 +80,8 @@ class SpaceVentureZ(Display):
             x.move()
             if isinstance(x, Asteroids) and x.hp <= 0:
                 self.obstacles_.remove(x)
+                if self.is_sound_on:
+                    self.asteroid_death_sound.play()  # play asteroid explosion sfx
                 temp = random.randint(1,7)
                 if temp %2 == 0:
                     self.obstacles_.append(StarPrize(x.x, x.y))
@@ -121,6 +130,8 @@ class SpaceVentureZ(Display):
                 x.draw(self.display)
                 if x.health <= 0:
                     self.enemies.remove(x)
+                    if self.is_sound_on:
+                        self.enemy_death_sound.play()  # play enemy death sfx
                     self.is_enemy_dead = True
 
                 if x.collision(self.player_ship.ship):
@@ -189,6 +200,8 @@ class SpaceVentureZ(Display):
         ''' CHECKING FOR END OF GAME (WIN/LOSS)'''
         if self.player_ship.health <= 0:
             # Loss
+            if self.is_sound_on:
+                self.player_death_sound.play()  # play player death sfx
             self.game_over = True
             self.end_screen("Defeat")
         if len(self.enemies) == 0 and self.boss_fight is False:
