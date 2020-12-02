@@ -105,7 +105,7 @@ class SpaceVentureZ(Display):
         for x in self.enemies:
             x.draw(self.display)
 
-        # ALL BOSS HANDLING MUST BE IN HERE
+        # ALL BOSS HANDLING MUST BE IN HERE IF NOT ASSOCIATED WITH OTHER OBJECTS
         if self.boss_fight is True:
             self.boss[0].draw()
             self.boss[0].auto_movement(self.player_ship)
@@ -178,6 +178,9 @@ class SpaceVentureZ(Display):
                     self.boss[0].health -= 10
                     self.player_ship.lasers.remove(p_laser.laser)
                     self.is_enemy_hit = True
+                    self.boss[0].boss_is_hit = True
+                else:
+                    self.boss[0].boss_is_hit = False
 
 
         '''Player Score'''
