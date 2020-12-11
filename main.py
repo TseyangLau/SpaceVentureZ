@@ -32,6 +32,10 @@ class SpaceVentureZ(Display):
         self.enemy_death_sound.set_volume(0.4)
         self.player_death_sound = pygame.mixer.Sound('game_audio/death_player.wav')
         self.player_death_sound.set_volume(0.4)
+        self.loot_sound = pygame.mixer.Sound('game_audio/loot.wav')
+        self.loot_sound.set_volume(0.5)
+        self.loot_hp_sound = pygame.mixer.Sound('game_audio/loot_health.wav')
+        self.loot_hp_sound.set_volume(0.5)
         '''creation of entities'''
         self.player_ship = Player(self.playerHealthPoints, self.width/2, self.height-64-20, 10, self.display)  # added display
         self.black_hole = BlackHole(self.width/2, 350)
@@ -94,9 +98,13 @@ class SpaceVentureZ(Display):
                     self.player_ship.health += 25
                     if self.player_ship.health >= self.playerHealthPoints:
                         self.player_ship.health = self.playerHealthPoints
+                    if self.is_sound_on:
+                        self.loot_hp_sound.play()  # play loot sfx
                     self.obstacles_.remove(x)
                 elif type(x) is StarPrize:
                     self.score += x.points
+                    if self.is_sound_on:
+                        self.loot_sound.play()  # play loot sfx
                     self.obstacles_.remove(x)
             if isinstance(x, StarPrize):
                 if x.off_screen():
@@ -252,8 +260,8 @@ class SpaceVentureZ(Display):
 if __name__ == '__main__':
     # create SpaceVentureZ game instance and run it
     svz = SpaceVentureZ()
-    #svz.menu()
-    svz.run_game()
+    svz.menu()
+    #svz.run_game()
 
 ''' 
 run() runs the game initially called in run_game in the Display class
